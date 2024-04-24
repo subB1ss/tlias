@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: tlias
+  jackson:
+    date-format: java.text.SimpleDateFormat
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://192.168.71.129:3306/tlias?characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    username: username
+    password: password
+    type: com.alibaba.druid.pool.DruidDataSource
+    druid:
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      validation-query: SELECT 1
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: org.atao.tlias.POJO
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  config:  classpath:log4j2.xml
+  level:
+    root: INFO
+    javax.activation: INFO
+    org.apache.catalina: INFO
+    org.apache.commons.beanutils.converters: INFO
+    org.apache.coyote.http11.Http11Processor: INFO
+    org.apache.http: INFO
+    org.apache.tomcat: INFO
+    org.springframework: INFO
+    org.atao.tlias.controller: DEBUG
+    org.atao.tlias.mapper: DEBUG
+    org.atao.tlias.service: DEBUG
+    web: DEBUG
+#    com.chinamobile.cmss.bdpaas.resource.monitor: DEBUG
+

@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.atao.tlias.mapper.StudentMapper">
+
+    <insert id="addStudents">
+        INSERT INTO
+            `tlias`.`student`
+        (
+         name,
+         no,
+         gender,
+         phone,
+         degree,
+         clazz_id,
+         <if test="students[0].idCard != null and students[0].idCard != ''">
+             id_card,
+         </if>
+         <if test="students[0].isCollege != null">
+             is_college,
+         </if>
+         <if test="students[0].address != null and students[0].address != ''">
+             address,
+         </if>
+         <if test="students[0].graduationDate != null">
+             graduation_date,
+         </if>
+         create_time,
+         update_time
+        )
+        VALUE
+        <foreach collection="students" item="student" separator=",">
+            (
+                #{student.name},
+                #{student.no},
+                #{student.gender},
+                #{student.phone},
+                #{student.degree},
+                #{student.clazzId},
+            <if test="student.idCard != null and student.idCard != ''">
+                #{student.idCard},
+            </if>
+            <if test="student.isCollege != null">
+                #{student.isCollege},
+            </if>
+            <if test="student.address != null and student.address != ''">
+                #{student.address},
+            </if>
+            <if test="student.graduationDate != null">
+                #{student.graduationDate},
+            </if>
+                TIME(NOW()),
+                TIME(NOW())
+            )
+        </foreach>
+
+    </insert>
+    <update id="editStudent">
+        UPDATE 
+            tlias.student
+        <set>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="no != null">
+                `no` = #{no},
+            </if>
+            <if test="phone != null and phone != ''">
+                `phone` = #{phone},
+            </if>
+            <if test="gender != null and gender != ''">
+                `gender` = #{gender},
+            </if>
+            <if test="degree != null">
+                `degree` = #{degree},
+            </if>
+            <if test="idCard != null and idCard != ''">
+                `id_card` = #{idCard},
+            </if>
+            <if test="isCollege != null">
+                `is_college` = #{isCollege},
+            </if>
+            <if test="address != null and address != ''">
+                `address` = #{address},
+            </if>
+            <if test="graduationDate != null">
+                `graduation_date` = #{graduationDate},
+            </if>
+            <if test="violationCount != null">
+                `violation_count` = #{violationCount},
+            </if>
+            <if test="violationScore != null">
+                `violation_score` = #{violationScore},
+            </if>
+            <if test="clazzId != null">
+                `clazz_id` = #{clazzId},
+            </if>
+                `update_time` = TIME(NOW())
+        </set>
+        where
+            id = #{id}
+    </update>
+    <select id="getStudentsByParam" resultType="org.atao.tlias.POJO.Student">
+        SELECT
+            id,
+            name,
+            no,
+            gender,
+            phone,
+            id_card,
+            is_college,
+            address,
+            degree,
+            graduation_date,
+            clazz_id,
+            violation_count,
+            violation_score,
+            create_time,
+            update_time
+        FROM
+            student
+        <where>
+            <if test="name != null and name != ''">
+                name = #{name}
+            </if>
+            <if test="degree != null">
+                and degree = #{degree}
+            </if>
+            <if test="clazzId != null">
+                and clazz_id = #{clazzId}
+            </if>
+        </where>
+    </select>
+    <select id="getStudents" resultType="org.atao.tlias.POJO.Student">
+        SELECT
+            id,
+            name,
+            no,
+            gender,
+            phone,
+            id_card,
+            is_college,
+            address,
+            degree,
+            graduation_date,
+            clazz_id,
+            violation_count,
+            violation_score,
+            create_time,
+            update_time
+        FROM
+            student
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+        </where>
+
+    </select>
+</mapper>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.atao.tlias.mapper.ClazzsMapper">
+    <insert id="addClazz">
+        insert into
+        `tlias`.`clazz`
+        (name,
+         room,
+         begin_date,
+         end_date,
+         <if test="clazzesList[0].masterId != null">
+             master_id,
+         </if>
+         subject,
+         create_time,
+         update_time)
+
+        value
+        <foreach collection="clazzesList" item="clazz" separator=",">
+            (
+                #{clazz.name},
+                #{clazz.room},
+                #{clazz.beginDate},
+                #{clazz.endDate},
+                <if test="clazz.masterId != null">
+                    #{clazz.masterId},
+                </if>
+                #{clazz.subject},
+                TIME(NOW()),
+                TIME(NOW())
+            )
+        </foreach>
+    </insert>
+    <update id="setClazz">
+        update
+            tlias.clazz
+        <set>
+            <if test="name != null and name != ''">
+                `name` = #{name},
+            </if>
+            <if test="room != null and room != ''">
+                `room` = #{room},
+            </if>
+            <if test="beginDate != null">
+                `begin_date` = #{beginDate},
+            </if>
+            <if test="end_date != null">
+                `end_date` = #{endDate},
+            </if>
+            <if test="subject != null">
+                `subject` = #{subject},
+            </if>
+            <if test="masterId != null">
+                `master_id` = #{master_id},
+            </if>
+            `update_time` = TIME(NOW())
+        </set>
+        where
+            id = #{id}
+    </update>
+    <select id="getClazzs" resultType="ClazzExt">
+        select
+            c.id,
+            c.`name`,
+            c.room,
+            c.begin_date,
+            c.end_date,
+            master_id,
+            `subject`,
+            c.create_time,
+            c.update_time,
+            e.name as master_name
+
+        from
+            tlias.clazz c
+        left join
+            emp e
+        on
+            e.id = c.master_id
+        <where>
+            <if test="name != null and name != ''">
+                name = #{name}
+            </if>
+            <if test="begin != null and begin != ''">
+                and begin_date = #{begin}
+            </if>
+            <if test="end != null and end != ''">
+                and end_date = #{end}
+            </if>
+        </where>
+
+    </select>
+    <select id="getClazzes" resultType="org.atao.tlias.POJO.Clazz">
+        select
+            id,
+            name,
+            room,
+            begin_date,
+            end_date,
+            master_id,
+            subject,
+            create_time,
+            update_time
+        from
+            tlias.clazz
+        <where>
+            <if test="id != null">
+                `id` = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                `name` = #{name}
+            </if>
+        </where>
+    </select>
+</mapper>
